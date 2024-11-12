@@ -2,24 +2,22 @@
 % main function to calculate the cost of the truss members
 
 function skills1()
-    % Setting up fmincon optimization
-    initial_xC = 1; % Initial guess for xC
-    initial_rAB = 0.1; % Initial guess for rAB
-    initial_rAC = 0.1; % Initial guess for rAC
-    initial_rBC = 0.1; % Initial guess for rBC
-
-    X0 = [initial_xC, initial_rAB, initial_rAC, initial_rBC]; % Initial guess
-    lb = [0, 0.01, 0.01, 0.01]; % Lower bounds
-    ub = [10, 1, 1, 1]; % Upper bounds
-
-    options = optimoptions('fmincon', 'Display', 'iter', 'Algorithm', 'sqp');
-    [X_optimal, cost_min] = fmincon(@objective_and_constraints, X0, [], [], [], [], lb, ub, [], options);
-
-    % Display the optimal solution
-    disp('Optimal design variables:');
-    disp(X_optimal);
-    disp('Minimum cost:');
-    disp(cost_min);
+   
+    % --- OPTIMISATION STRATEGY ---
+    % Define initial guess for the design variables (xC, rAB, rAC, rBC)
+    initial_guess = [1, 0.1, 0.1, 0.1]; % example starting values
+    
+    % Set options for fminsearch (optional)
+    options = optimset('Display', 'iter', 'TolFun', 1e-6, 'TolX', 1e-6);
+    
+    % Run the Nelder-Mead optimization using fminsearch
+    [optimized_X, fval] = fminsearch(@objective_and_constraints, initial_guess, options);
+    
+    % Display the optimized results
+    disp('Optimized Design Variables:');
+    disp(optimized_X);
+    disp('Minimum Cost:');
+    disp(fval);
 
     function [cost, c, ceq] = objective_and_constraints(X)
         
