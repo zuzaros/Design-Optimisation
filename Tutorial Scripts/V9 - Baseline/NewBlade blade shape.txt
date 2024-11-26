@@ -1,0 +1,51 @@
+# This text file represents a blade shape that can be imported into Ashes.
+
+# Name of the exported blade:
+# NewBlade
+# The blade had no description in the database.
+# About Airfoils.
+# The airfoil names must be found in the airfoil database in Ashes.
+# The nickname cannot have whitespace, but other than that can be anything.
+
+Airfoils
+# Nickname	Name in airfoil database
+1	S826
+
+# About Blade length.
+# Blade length is initial, projected on the pitch axis. So, not necessarily the exactly the physical ('measured') blade length.
+# Since the blade length is given, it is not necessary with an aerodynamical station at the blade tip.
+
+Blade length
+# Initial, projected blade length (m)
+1.1
+
+# About Aerodynamical stations.
+# For each aerodynamical station along the blade, its shape properties are listed.
+
+Aerodynamical stations
+# Position (m)	PrebendOutOfPlane (m)	PrebendInPlane (m)	Curvature angle (deg)	Twist angle (deg)	Chord length (m)	Airfoil nickname
+0.000000	0.000000	0.000000	0.000000	2.000000	0.200000	1
+0.045800	0.000000	0.000000	0.000000	2.000000	0.200000	1
+0.091700	0.000000	0.000000	0.000000	2.000000	0.200000	1
+0.137500	0.000000	0.000000	0.000000	2.000000	0.200000	1
+0.183300	0.000000	0.000000	0.000000	2.000000	0.200000	1
+0.229200	0.000000	0.000000	0.000000	2.000000	0.200000	1
+0.275000	0.000000	0.000000	0.000000	2.000000	0.200000	1
+0.320800	0.000000	0.000000	0.000000	2.000000	0.200000	1
+0.366700	0.000000	0.000000	0.000000	2.000000	0.200000	1
+0.412500	0.000000	0.000000	0.000000	2.000000	0.200000	1
+0.458300	0.000000	0.000000	0.000000	2.000000	0.200000	1
+0.504200	0.000000	0.000000	0.000000	2.000000	0.200000	1
+0.550000	0.000000	0.000000	0.000000	2.000000	0.200000	1
+0.595800	0.000000	0.000000	0.000000	2.000000	0.200000	1
+0.641700	0.000000	0.000000	0.000000	2.000000	0.200000	1
+0.687500	0.000000	0.000000	0.000000	2.000000	0.200000	1
+0.733300	0.000000	0.000000	0.000000	2.000000	0.200000	1
+0.779200	0.000000	0.000000	0.000000	2.000000	0.200000	1
+0.825000	0.000000	0.000000	0.000000	2.000000	0.200000	1
+0.870800	0.000000	0.000000	0.000000	2.000000	0.200000	1
+0.916700	0.000000	0.000000	0.000000	2.000000	0.200000	1
+0.962500	0.000000	0.000000	0.000000	2.000000	0.200000	1
+1.008300	0.000000	0.000000	0.000000	2.000000	0.200000	1
+1.054200	0.000000	0.000000	0.000000	2.000000	0.200000	1
+1.100000	0.000000	0.000000	0.000000	2.000000	0.200000	1

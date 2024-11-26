@@ -1,0 +1,6 @@
+Re and corresponding polar
+# Reynolds number (-)
+
+# Corresponding polar
+# AoA 	Cl 	Cd 	Cm
+# (deg) 	(-) 	(-) 	(-)
