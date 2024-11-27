@@ -1,10 +1,10 @@
 %%%%% For you to change to your specific file paths!!! %%%%%%
 
 % path for the ashes-cli.exe file
-ashesExePath = "C:/Program Files/Ashes 3.28/ashes-cli.exe";
+ashesExePath = "C:\Program Files\Ashes 3.28\ashes-cli.exe";
 
 %file path where the batch runs are saved to - can find this by opening Ashes -> tools -> preferences -> batch computing
-BatchPath = "C:\Users\scb72\Documents\Ashes 3.28\Batch runs";
+BatchPath = "C:/Users/zuzar/OneDrive/Documents/Ashes 3.28/Batch runs";
 
 %name of batch file (the .csv)
 BatchFileName = "RunStatic";    
@@ -25,7 +25,7 @@ list=list(~ismember({list.name},{'.','..'}));
 projectFilePath = 'BaseModel.ash';        
 
 %define database path
-db_path = 'C:/Users/scb72/AppData/Roaming/Simis/Ashes 3.28/ashescl.db';
+db_path = 'C:\Users\zuzar\AppData\Roaming\Simis\Ashes 3.28\ashescl.db';
 %closes in case a connection is left open
 databaseConnect(db_path,projectFilePath,'Disconnect')
 

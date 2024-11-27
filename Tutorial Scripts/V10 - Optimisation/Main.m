@@ -27,7 +27,7 @@ function F = objFunc(X,Params)
 
     disp(strcat('twist = ',num2str(X(1)),' degrees'))
 
-    Foils = {'S826'}; %specifies aerofoils to be used (must match name in Ashes aerofoil database)
+    Foils = {'naca2415'}; %specifies aerofoils to be used (must match name in Ashes aerofoil database)
     foilsDist = [ones(1,25)]; %specifies aerofoil distribution based on Foils index
     %^^ in the above foils distribution, foilDist is set to a vector of ones,
     %as there is only 1 aerofoil in the Fois variable

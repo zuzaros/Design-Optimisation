@@ -1,7 +1,7 @@
 function [rotor, blade] = runAshes(ashesExePath, projectFilePath, BatchPath, BatchFileName, caseNames)
 
     %checks and deletes any previous runs - do not remove!
-    if isfolder(strcat(BatchPath,'/'BatchFileName))
+    if isfolder(strcat(BatchPath,'/',BatchFileName))
         disp('Batch Run folder already exists, deleting folder')
         rmdir(strcat(BatchPath,'/',BatchFileName),'s')
     end

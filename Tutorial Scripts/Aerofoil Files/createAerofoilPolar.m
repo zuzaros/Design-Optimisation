@@ -3,7 +3,7 @@ clear all
 close all
 
 %%%% FOR YOU TO CHANGE %%%%%%
-aerofoilName = 'naca2415'; %define aerofoil name - must match the name in the downloaded files
+aerofoilName = 'naca4424'; %define aerofoil name - must match the name in the downloaded files
 ReynoldsRange = [5e4, 1e5, 2e5, 5e5, 1e6]; %list of Reynolds numbers for each downloaded polar.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
