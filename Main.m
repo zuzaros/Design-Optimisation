@@ -3,6 +3,8 @@ clear
 close all
 
 
+
+
 %%% Open InitialiseScript and change the filepaths to match your system
 InitialiseScript %runs initialistion script for file paths and names
 
@@ -13,14 +15,20 @@ X = fminbnd(f,-10,10); %efficient one-parameter, gradient-free optimiser
 databaseConnect(db_path,projectFilePath,'Disconnect')
 
 function F = objFunc(X,Params)
+    
     %define number of blades, twist, chord, and aerofoil at each aerodynamical station
-    %there are 25 stations, going from root to tip
+    
     numBlades = 3; %define number of blades on rotor (must be an integer!!)
     lambda = 7; %define the tip speed ratio (TSR) for the rotor
 
-    newTwist = ones(25,1)*X(1); %creates a constant twist distribution of X(1) degrees
-    newChord = optimalChord(numBlades,lambda);
+    % there are 25 stations, going from root to tip
+    r = linspace(0,1,25); % radial position of blade in 25 steps
+    lambda_r = lambda*r; % local tip speed ratio
 
+    newTwist = ones(25,1)*X(1); %creates a constant twist distribution of X(1) degrees
+    newChord = optimalChord(numBlades,lambda_r);
+
+    
     disp(strcat('twist = ',num2str(X(1)),' degrees'))
 
     Foils = {'naca2424'}; %specifies aerofoils to be used (must match name in Ashes aerofoil database)
@@ -65,6 +73,8 @@ function F = objFunc(X,Params)
     ylabel('Angle of attack')
     hold on
     drawnow
+
+
    
 end
 
