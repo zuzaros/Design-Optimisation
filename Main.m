@@ -58,20 +58,19 @@ function F = objFunc(X,Params)
     %blade
     
     %create first subplot
-    subplot(2,2,1)
+    subplot(1,2,1)
     plot([2,4,6,8,10],rotor.CP)
     xlabel('TSR')
     ylabel('C_P')
     hold on
 
     %create second subplot
-    subplot(2,2,2)
+    subplot(1,2,2)
     plot(linspace(0,1,25),blade.AngleOfAttack(I,:)) %plot the angle of attack distribution for the load case that produced the max CP
     xlabel('r/R') %normalised spanwise location across blade - where r/R  
     ylabel('Angle of attack')
     hold on
     drawnow
-
-
+   
 end
 
