@@ -42,7 +42,6 @@ combined_y_smooth = [];
 
 % Fit and plot cubic splines for the selected wind speed
 figure;
-hold on;
 colors = lines(1); % Generate unique color
 markers = {'o'}; % Marker
 
@@ -50,11 +49,6 @@ speed_data = angles(:, selected_column);
 spline_fit = spline(positions, speed_data);
 x_smooth = linspace(min(positions), max(positions), 500);
 y_smooth = ppval(spline_fit, x_smooth);
-
-% Plot original points and spline
-plot(x_smooth, y_smooth, '-', 'Color', 'k', 'LineWidth', 2);
-scatter(positions, speed_data, 20, 'k', markers{1}, 'filled',...
-    'DisplayName', sprintf('%d m/s', wind_speeds));
 
 % Combine smoothed spline data for fitting
 combined_x_smooth = [combined_x_smooth, x_smooth];
@@ -68,7 +62,18 @@ average_y = accumarray(idx, combined_y_smooth, [], @mean);
 unique_x = unique_x(:);
 average_y = average_y(:);
 
-% Fit polynomials to the averaged data
+% Add the (0,0) starting point for rational fit
+unique_x = [0; unique_x];
+average_y = [0; average_y];
+
+% Subplot 1: Polynomial Fits
+subplot(1,3, 1);
+hold on;
+plot(x_smooth, y_smooth, '-', 'Color', 'k', 'LineWidth', 2);
+scatter(positions, speed_data, 20, 'k', markers{1}, 'filled', ...
+    'DisplayName', sprintf('%d m/s', wind_speeds));
+
+% Fit polynomials of orders 2, 3, 4, 5, and 6 to the averaged data
 poly_orders = [2, 3, 4, 5, 6];
 poly_fits = cell(length(poly_orders), 1);
 poly_coeffs = cell(length(poly_orders), 1);
@@ -83,14 +88,26 @@ for i = 1:length(poly_orders)
     y_fit = polyval(p, linspace(min(positions), max(positions), 500), [], mu);
     
     % Plot the polynomial fit
-    plot(linspace(min(positions), max(positions), 500), y_fit, 'LineWidth', 0.5, 'DisplayName', sprintf('Polynomial Fit (order %d)', degree));
+    plot(linspace(min(positions), max(positions), 500), y_fit, 'LineWidth', 1.5, 'DisplayName', sprintf('Polynomial Fit (order %d)', degree));
     
     % Display the polynomial coefficients
     disp(sprintf('Polynomial coefficients (order %d):', degree));
     disp(p);
 end
 
-% Fit Fourier series to the averaged data
+xlabel('Position (m)', 'FontSize', 12);
+ylabel('Twist Angle (degrees)', 'FontSize', 12);
+legend('Location', 'northeast');
+title('Polynomial Fits');
+hold off;
+
+% Subplot 2: Fourier Series Fits
+subplot(1,3, 2);
+hold on;
+plot(x_smooth, y_smooth, '-', 'Color', 'k', 'LineWidth', 2);
+scatter(positions, speed_data, 20, 'k', markers{1}, 'filled', ...
+    'DisplayName', sprintf('%d m/s', wind_speeds));
+
 fourier_orders = [1, 2, 3];
 fourier_fits = cell(length(fourier_orders), 1);
 fourier_coeffs = cell(length(fourier_orders), 1);
@@ -105,14 +122,26 @@ for i = 1:length(fourier_orders)
     y_fourier = feval(fourier_fit, linspace(min(positions), max(positions), 500));
     
     % Plot the Fourier series fit
-    plot(linspace(min(positions), max(positions), 500), y_fourier, 'LineWidth', 0.5, 'DisplayName', sprintf('Fourier Series Fit (order %d)', order));
+    plot(linspace(min(positions), max(positions), 500), y_fourier, 'LineWidth', 1.5, 'DisplayName', sprintf('Fourier Series Fit (order %d)', order));
     
     % Display the Fourier series coefficients
     disp(sprintf('Fourier series coefficients (order %d):', order));
     disp(coeffvalues(fourier_fit));
 end
 
-% Fit rational functions to the averaged data
+xlabel('Position (m)', 'FontSize', 12);
+ylabel('Twist Angle (degrees)', 'FontSize', 12);
+legend('Location', 'northeast');
+title('Fourier Series Fits');
+hold off;
+
+% Subplot 3: Rational Function Fits
+subplot(1, 3, 3);
+hold on;
+plot(x_smooth, y_smooth, '-', 'Color', 'k', 'LineWidth', 2);
+scatter(positions, speed_data, 20, 'k', markers{1}, 'filled', ...
+    'DisplayName', sprintf('%d m/s', wind_speeds));
+
 fit_types = {'rat11', 'rat22', 'rat33'};
 fit_names = {'Rational Fit (1/1)', 'Rational Fit (2/2)', 'Rational Fit (3/3)'};
 
@@ -125,15 +154,15 @@ for i = 1:length(fit_types)
     y_custom = feval(custom_fit, linspace(min(positions), max(positions), 500));
     
     % Plot the custom fit
-    plot(linspace(min(positions), max(positions), 500), y_custom, 'LineWidth', 1, 'DisplayName', fit_name);
+    plot(linspace(min(positions), max(positions), 500), y_custom, 'LineWidth', 1.5, 'DisplayName', fit_name);
     
     % Display the custom fit coefficients
     disp(sprintf('%s coefficients:', fit_name));
     disp(coeffvalues(custom_fit));
 end
 
-% Labels and legend
-xlabel('Position (m)', 'FontSize', 16);
-ylabel('Twist Angle (degrees)', 'FontSize', 16);
+xlabel('Position (m)', 'FontSize', 12);
+ylabel('Twist Angle (degrees)', 'FontSize', 12);
 legend('Location', 'northeast');
+title('Rational Function Fits');
 hold off;
