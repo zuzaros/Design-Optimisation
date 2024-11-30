@@ -1,3 +1,5 @@
+clc
+
 % Data for positions and twist angles
 positions = [
     0, 0.136, 0.4481, 0.8001, 1.0767, 1.2779, 1.4958, 1.7137, 1.9149, 2.116, ...
@@ -33,14 +35,16 @@ angles = [
 
 wind_speeds = 5:13;
 
-% Plot setup
+% Initialize arrays to hold combined smoothed spline data
+combined_x_smooth = [];
+combined_y_smooth = [];
+
+% Fit and plot cubic splines for each wind speed
 figure;
 hold on;
-grid on;
 colors = lines(length(wind_speeds)); % Generate unique colors
 markers = {'o', 's', '^', 'd', 'p', 'h', 'v', '<', '>'}; % Different markers
 
-% Fit and plot cubic splines for each wind speed
 for i = 1:length(wind_speeds)
     speed_data = angles(:, i);
     spline_fit = spline(positions, speed_data);
@@ -48,13 +52,71 @@ for i = 1:length(wind_speeds)
     y_smooth = ppval(spline_fit, x_smooth);
     
     % Plot original points and spline
-    plot(x_smooth, y_smooth, '-', 'Color', colors(i, :), 'LineWidth', 1.5);
-    scatter(positions, speed_data, 50, colors(i, :), markers{i}, 'filled', ...
+    %plot(x_smooth, y_smooth, '-', 'Color', 'k', 'LineWidth', 0.5);
+    scatter(positions, speed_data, 20, 'k', markers{i},  ...
         'DisplayName', sprintf('%d m/s', wind_speeds(i)));
+
+        
+
+    % Combine smoothed spline data for fitting
+    combined_x_smooth = [combined_x_smooth, x_smooth];
+    combined_y_smooth = [combined_y_smooth, y_smooth];
+end
+
+% Average the y values for each unique x value
+[unique_x, ~, idx] = unique(combined_x_smooth);
+average_y = accumarray(idx, combined_y_smooth, [], @mean);
+
+% Ensure unique_x and average_y are column vectors
+unique_x = unique_x(:);
+average_y = average_y(:);
+
+% Fit polynomials of diferent orders to the averaged data
+poly_orders = [3, 4, 5, 6];
+poly_fits = cell(length(poly_orders), 1);
+poly_coeffs = cell(length(poly_orders), 1);
+
+for i = 1:length(poly_orders)
+    degree = poly_orders(i);
+    [p, S, mu] = polyfit(unique_x, average_y, degree);
+    poly_fits{i} = p;
+    poly_coeffs{i} = p;
+    
+    % Evaluate the polynomial fit
+    y_fit = polyval(p, x_fit, [], mu);
+    
+    % Plot the polynomial fit
+    plot(x_fit, y_fit, 'LineWidth', 1, 'DisplayName', sprintf('Polynomial Fit (order %d)', degree));
+    
+    % Display the polynomial coefficients
+    disp(sprintf('Polynomial coefficients (order %d):', degree));
+    disp(p);
+end
+
+% Fit Fourier series of different orders to the averaged data
+fourier_orders = [2, 3, 4];
+fourier_fits = cell(length(fourier_orders), 1);
+fourier_coeffs = cell(length(fourier_orders), 1);
+
+for i = 1:length(fourier_orders)
+    order = fourier_orders(i);
+    fourier_fit = fit(unique_x, average_y, sprintf('fourier%d', order));
+    fourier_fits{i} = fourier_fit;
+    fourier_coeffs{i} = coeffvalues(fourier_fit);
+    
+    % Evaluate the Fourier series fit
+    y_fourier = feval(fourier_fit, x_fit);
+    
+    % Plot the Fourier series fit
+    plot(x_fit, y_fourier, 'LineWidth', 1, 'DisplayName', sprintf('Fourier Series Fit (order %d)', order));
+    
+    % Display the Fourier series coefficients
+    disp(sprintf('Fourier series coefficients (order %d):', order));
+    disp(coeffvalues(fourier_fit));
 end
 
 % Labels and legend
 xlabel('Position (m)', 'FontSize', 16);
 ylabel('Twist Angle (degrees)', 'FontSize', 16);
-legend('Location' ,'northeast');
+legend('Location', 'northeast');
 hold off;
