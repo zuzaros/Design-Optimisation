@@ -1,0 +1,127 @@
+function [power] = calcEnergyOutput()
+   
+% Parameters
+air_density = 1.225; % Air density (kg/m^3)
+A = 3.6; % Swept area (m^2)
+v_cut_in = 1.5; % Cut-in speed (m/s)
+v_cut_out = 15; % Cut-out speed (m/s)
+
+% Wind speed range
+v = linspace(0, 30, 1000); % Discretize wind speeds (m/s)
+
+
+% parameters from literature
+    k = 2.0974232; % shape parameter
+    c = 5.1039554; % scale parameter
+    u = -1.2692170; % location parameter
+    
+    % 3-parameter formula for the Weibull distribution
+    WBD = @(v) (k/c) * ((v-u)/c).^(k-1) .* exp(-((v-u)/c).^k);
+
+% Weibull PDF
+p_v = (k / lambda) * (v / lambda).^(k - 1) .* exp(-(v / lambda).^k);
+
+% Pre-allocate results
+AEP_values = zeros(size(Cp_values)); % AEP for each Cp value
+
+% Loop over each Cp value
+for idx = 1:length(Cp_values)
+    Cp = Cp_values(idx);
+    
+    % Turbine power output
+    P_turbine = 0.5 * air_density * A * v.^3 * Cp;
+    
+    % Apply cut-in and cut-out limits
+    P_turbine(v < v_cut_in | v > v_cut_out) = 0;
+    
+    % Annual Energy Production
+    AEP_values(idx) = trapz(v, P_turbine .* p_v) * 8760; % Integrate and scale for hours in a year
+end
+
+% Plot results
+figure;
+plot(Cp_values, AEP_values, '-o', 'LineWidth', 1.5);
+grid on;
+xlabel('Power Coefficient, C_P');
+ylabel('Annual Energy Production (AEP) [kWh]');
+title('AEP vs C_P');
+
+
+
+
+
+
+%% calculate deficits based on x,h and R
+    
+    %set the thrust coefficient of the turbines (assuming constant for all turbines)
+    Ct = 0.75;
+    
+    %set the wake expansion constant
+    kw = 0.06;
+    
+    % calculate the velocity deficit for the turbines in the array
+    % this is dependent on the shadowing of the turbines in front of them, so
+    % depend on turbine position, turbine radius, and height
+    def = calcDef(x,h,R,Ct,kw);
+    
+    %% create speed array with deficit speeds
+    max_speed = 16;
+    step_size = 0.1;
+    no_turbines = length(R);
+    
+    V = (0:step_size:max_speed)'; % create a Nx1 array containing all the windspeeds to be sampled
+
+    % turn this into a Nx8 array, containing the speed at each wind turbine
+    % at each V due to wake effects
+    velocities = zeros(length(V),no_turbines); % initiate the array
+    for i=1:length(V)
+        velocities(i,:) = V(i).*(1-def);
+    end
+
+    %% calc power
+    % now create a corresponding power array with the power produced by
+    % each turbine 
+    power_curves = zeros(length(V),no_turbines); % initiate the array
+    for i=1:no_turbines
+        % calcPowerCurve takes in an array v of windspeeds for a turbine
+        % with radius R and ouputs column vector of the power of the
+        % turbine at each of these windspeeds
+        power_curves(:,i) = calcPowerCurve(velocities(:,i),R(i));
+    end
+    
+    % need to make sure that if the first turbine has cut out due to  high
+    % speed, so have the rest
+    for i=1:length(V)
+        if power_curves(i,1) == 0
+            power_curves(i,:) = 0;
+        end
+    end
+
+    % need to sum the power for each turbine and make sure if the first
+    % turbine has cut out due to high wind speed, so have the rest
+    total_power = zeros(length(V), 1);
+    for i=1:length(V)
+        total_power(i) = sum(power_curves(i,:));
+    end
+
+
+    %% evaluate weibull distribution (WBD)
+    WBD = WeibullDistribution(V);
+
+
+    %% multiply the power values at each velocity by the WBD at each velocity and find the area underneath the resulting curve
+    power = intPowerProbabilityCurve(V,total_power,WBD);
+
+end
+
+
+
+
+function [power] = intPowerProbabilityCurve(x,power,probability)
+    % this calculates the power output of a turbine for its given power
+    % curve and probability density function of the windspeeds
+    efficiency = 0.9;
+    C = efficiency * 8760;
+    
+    power = C*trapz(x,power.*probability);
+end

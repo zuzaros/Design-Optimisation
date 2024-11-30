@@ -46,3 +46,9 @@ hold off
 % Add titles to the peak, mean, and standard deviation lines
 text(peakX, peakValue, sprintf('   Mode = %.2f m/s', peakX), 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'Color', 'b', 'FontSize', 12, 'FontWeight', 'bold')
 text(mean, f(mean), sprintf('   Mean = %.2f m/s', mean), 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'Color', 'r', 'FontSize', 12, 'FontWeight', 'bold')
+
+% calculate the 5th and 95th percentiles
+p5 = wblinv(0.05, A, k);
+p95 = wblinv(0.95, A, k);
+fprintf('The 5th percentile of the Weibull distribution for Poland is %f\n', p5)
+fprintf('The 95th percentile of the Weibull distribution for Poland is %f\n', p95)

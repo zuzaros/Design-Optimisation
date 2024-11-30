@@ -26,7 +26,7 @@ function F = objFunc(X,Params)
     lambda_r = lambda*r; % local tip speed ratio
 
     newTwist = ones(25,1)*X(1); %creates a constant twist distribution of X(1) degrees
-    newChord = optimalChord(numBlades,lambda_r);
+    newChord = optimalChord(numBlades,r,lambda_r);
 
     
     disp(strcat('twist = ',num2str(X(1)),' degrees'))
