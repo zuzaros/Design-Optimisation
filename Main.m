@@ -3,8 +3,6 @@ clear
 close all
 
 
-
-
 %%% Open InitialiseScript and change the filepaths to match your system
 InitialiseScript %runs initialistion script for file paths and names
 
@@ -28,7 +26,7 @@ function F = objFunc(X,Params)
     newTwist = ones(25,1)*X(1); %creates a constant twist distribution of X(1) degrees
     newChord = optimalChord(numBlades,r,lambda_r);
 
-    
+      
     disp(strcat('twist = ',num2str(X(1)),' degrees'))
 
     Foils = {'naca2424'}; %specifies aerofoils to be used (must match name in Ashes aerofoil database)
@@ -60,14 +58,14 @@ function F = objFunc(X,Params)
     %blade
     
     %create first subplot
-    subplot(1,2,1)
+    subplot(2,2,1)
     plot([2,4,6,8,10],rotor.CP)
     xlabel('TSR')
     ylabel('C_P')
     hold on
 
     %create second subplot
-    subplot(1,2,2)
+    subplot(2,2,2)
     plot(linspace(0,1,25),blade.AngleOfAttack(I,:)) %plot the angle of attack distribution for the load case that produced the max CP
     xlabel('r/R') %normalised spanwise location across blade - where r/R  
     ylabel('Angle of attack')
@@ -75,6 +73,5 @@ function F = objFunc(X,Params)
     drawnow
 
 
-   
 end
 
