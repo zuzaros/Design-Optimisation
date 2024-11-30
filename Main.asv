@@ -27,7 +27,7 @@ fun = @(X)objFunc(X,Params); %objective function
 intcon=[3];
 
 %run the genetic algorithm
-options = optimoptions('ga','PlotFcn',@gaplotbestf,'MaxGenerations',20,'PopulationSize',20,'FunctionTolerance',1e-6);
+options = optimoptions('ga','PlotFcn',@gaplotbestf,'MaxGenerations',20,'PopulationSize',100,'FunctionTolerance',1e-6);
 [x,fval,exitflag,output,population,scores] = ga(fun,nvars,A,b,Aeq,beq,lb,ub,nonlcon,intcon,options);
 
 % Display the optimal results
@@ -103,16 +103,16 @@ function F = objFunc(X,Params)
     hold on
     drawnow
 
-    subplot(2,2,3)
+    subplot(2,2,)
     plot(linspace(0,1,25), newChord)
     ylabel('Chord length, m')
-    xlabel('r/R')
+    xlabel('Normalised span location, r/R')
     hold on
      
-    subplot(2,2,4)
+    subplot(2,2,2)
     plot(linspace(0,1,25), newTwist)
     ylabel('Local twist, deg')
-    xlabel('r/R')
+    xlabel('Normalised span location, r/R')
     hold on
     drawnow
    
