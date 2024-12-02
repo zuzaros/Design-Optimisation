@@ -69,7 +69,7 @@ average_y = [0; average_y];
 % Subplot 1: Polynomial Fits
 subplot(1,3, 1);
 hold on;
-plot(x_smooth, y_smooth, '-', 'Color', 'k', 'LineWidth', 2);
+plot(positions, speed_data, '-k', 'LineWidth', 2); % Connect the dots with straight lines
 scatter(positions, speed_data, 20, 'k', markers{1}, 'filled', ...
     'DisplayName', sprintf('%d m/s', wind_speeds));
 
@@ -104,7 +104,7 @@ hold off;
 % Subplot 2: Fourier Series Fits
 subplot(1,3, 2);
 hold on;
-plot(x_smooth, y_smooth, '-', 'Color', 'k', 'LineWidth', 2);
+plot(positions, speed_data, '-k', 'LineWidth', 2); % Connect the dots with straight lines
 scatter(positions, speed_data, 20, 'k', markers{1}, 'filled', ...
     'DisplayName', sprintf('%d m/s', wind_speeds));
 
@@ -138,7 +138,7 @@ hold off;
 % Subplot 3: Rational Function Fits
 subplot(1, 3, 3);
 hold on;
-plot(x_smooth, y_smooth, '-', 'Color', 'k', 'LineWidth', 2);
+plot(positions, speed_data, '-k', 'LineWidth', 2); % Connect the dots with straight lines
 scatter(positions, speed_data, 20, 'k', markers{1}, 'filled', ...
     'DisplayName', sprintf('%d m/s', wind_speeds));
 
