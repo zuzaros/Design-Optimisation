@@ -24,7 +24,7 @@ nonlcon = [];
 nvars = 3; %number of variables
 fun = @(X)objFunc(X,Params); %objective function
 
-intcon=[3];
+intcon=3;
 
 %run the genetic algorithm
 options = optimoptions('ga','PlotFcn',@gaplotbestf,'MaxGenerations',20,'PopulationSize',20,'FunctionTolerance',1e-6);
