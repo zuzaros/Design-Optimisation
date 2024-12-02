@@ -10,7 +10,7 @@ function [AEP] = calcEnergyOutput(Cp)
     % Wind speed range
     v = linspace(0, max_v, 1000); % Discretize wind speeds (m/s)
     
-    % parameters from literature
+    % Parameters from literature
     k = 2.0974232; % shape parameter
     c = 5.1039554; % scale parameter
     u = -1.2692170; % location parameter
@@ -24,8 +24,14 @@ function [AEP] = calcEnergyOutput(Cp)
     % Ensure Cp is a row vector
     Cp = Cp(:)';
 
-    % Interpolate Cp values to match the wind speed range
-    Cp_interp = interp1(linspace(0, max_v, length(Cp)), Cp, v, 'linear', 'extrap');
+    % Check if Cp is a single value or an array
+    if length(Cp) == 1
+        % Use the single Cp value directly
+        Cp_interp = Cp * ones(size(v));
+    else
+        % Interpolate Cp values to match the wind speed range
+        Cp_interp = interp1(linspace(0, max_v, length(Cp)), Cp, v, 'linear', 'extrap');
+    end
 
     % Turbine power output
     P_turbine = 0.5 * air_density * A * (v.^3) .* Cp_interp;
@@ -34,12 +40,9 @@ function [AEP] = calcEnergyOutput(Cp)
     P_turbine(v < v_cut_in | v > v_cut_out) = 0;
     
     % Calculate the Annual Energy Production (AEP)
-    AEP = (trapz(v, P_turbine .* WBD_values) * 8760)*10^(-3); % Integrate and scale for hours in a year
+    AEP = trapz(v, P_turbine .* WBD_values) * 8760 * 10^(-3); % Integrate and scale for hours in a year
     
-       
-
     %% Visualization for debugging purposes
-
     %{
     figure;
     
@@ -72,10 +75,4 @@ function [AEP] = calcEnergyOutput(Cp)
     
     hold off;
     %}
-
 end
-
-
-
-
-
