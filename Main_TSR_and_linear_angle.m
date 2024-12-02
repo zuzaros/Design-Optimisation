@@ -27,15 +27,12 @@ fun = @(X)objFunc(X,Params); %objective function
 intcon=3;
 
 %run the genetic algorithm
-options = optimoptions('ga','PlotFcn',@gaplotbestf,'MaxGenerations',20,'PopulationSize',20,'FunctionTolerance',1e-6);
+options = optimoptions('ga','MaxGenerations',20,'PopulationSize',20,'FunctionTolerance',1e-6);
 [x,fval,exitflag,output,population,scores] = ga(fun,nvars,A,b,Aeq,beq,lb,ub,nonlcon,intcon,options);
 
-% Display the optimal results
-disp('Optimal X values:');
-disp(x);
-disp('Maximum CP value:');
-disp(-fval); % Since we minimized the negative CP, the actual CP is -fval
-
+% print optimal values of the variables in command window
+disp('Optimal values of the variables are:')
+disp(x)
 
 databaseConnect(db_path,projectFilePath,'Disconnect')
 
