@@ -1,0 +1,9 @@
+Load case set;Load case;Enabled ;Duration;Rec. time step; Sensors;Jobs;Atmosphere;Initial conditions;Initial conditions;Rotor;Wind: Uniform;Wind: Uniform
+;;;[s];[];;[];Type [];RPM, TSR, or Tip speed [];TSR [];Blade type [];Wind speed [m/s];Wind angle [°]
+;;;;;;;Wind.Type;Rotor.RpmOrTsrOrTipSpeed;Rotor.Tsr;Rotor.BladeType;UniformWind.Speed;UniformWind.Angle
+Load case set 1;;1;0;1;;;;;;;;
+;Load case 1;1;;;Rotor@@Rotor@&BladeSpan@@Blade 1@;1;Uniform;Specify TSR;1;NewBlade;5;0
+;Load case 2;1;;;Rotor@@Rotor@&BladeSpan@@Blade 1@;1;Uniform;Specify TSR;4;NewBlade;5;0
+;Load case 3;1;;;Rotor@@Rotor@&BladeSpan@@Blade 1@;1;Uniform;Specify TSR;7;NewBlade;5;0
+;Load case 4;1;;;Rotor@@Rotor@&BladeSpan@@Blade 1@;1;Uniform;Specify TSR;10;NewBlade;5;0
+;Load case 5;1;;;Rotor@@Rotor@&BladeSpan@@Blade 1@;1;Uniform;Specify TSR;13;NewBlade;5;0

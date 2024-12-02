@@ -1,0 +1,22 @@
+# This text file represents an airfoil's polar(s) (coefficients) that can be imported into Ashes.
+# One or more polars can be imported. Each polar is given for a particular Reynolds number (Re).
+# Thus, polars for more than one Reynolds numbers can be given in this file.
+
+# Formatting rules (conventions): 
+#  - the keyword 'Airfoil name' must be found in the file and the airfoil name must be given 
+# on the line immediately after the line with (only) the keyword (except for comment lines).
+#  - the airfoil database cannot already have an airfoil with this name (the comparison is made not considering case nor whitespace).
+#  - if the name is already found in the airfoil database, an error message will be given and the file is not imported.
+#  - the keyword 'Re and corresponding polar' must preceed each Reynolds number and corresponding polar data set.
+#  - the first (non-comment) line after the keyword must contain only the Reynolds number.
+#  - each preceding line must contain (and in this order) the angle of attack (AoA) in degrees, the lift coefficient,
+# the drag coefficient, and finally the moment coefficient.
+#  - the moment coefficient is referenced to the quarter chord point (as per convention).
+#  - the angle of attack (AoA) must be strictly increasing.
+#  - the coefficients cannot be negative and must be smaller than 5 (in order to catch typos).
+#  - blank lines between the keyword and the data is NOT allowed nor are blank lines within the 'block of data.
+#  - a polar for a Reynolds number can only be given once.
+#  - if the Reynolds number corresponding to a polar is unknown, 0 or a negative number is given.
+#  - if there is a polar with an unknown Reynolds number, then there can be no other polar in the file.
+
+Airfoil name
