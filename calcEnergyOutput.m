@@ -5,9 +5,10 @@ function [AEP] = calcEnergyOutput(Cp)
     A = 3.6; % Swept area (m^2)
     v_cut_in = 2.9; % Cut-in speed (m/s)
     v_cut_out = 13; % Cut-out speed (m/s)
+    max_v = 16; % Maximum wind speed (m/s)
     
     % Wind speed range
-    v = linspace(0, 16, 1000); % Discretize wind speeds (m/s)
+    v = linspace(0, max_v, 1000); % Discretize wind speeds (m/s)
     
     % parameters from literature
     k = 2.0974232; % shape parameter
@@ -19,19 +20,23 @@ function [AEP] = calcEnergyOutput(Cp)
     
     % Evaluate the Weibull distribution at the wind speed values
     WBD_values = WBD(v);
-    
+
+    % Ensure Cp is a row vector
+    Cp = Cp(:)';
+
+    % Interpolate Cp values to match the wind speed range
+    Cp_interp = interp1(linspace(0, max_v, length(Cp)), Cp, v, 'linear', 'extrap');
+
     % Turbine power output
-    P_turbine = 0.5 * air_density * A * v.^3 * Cp;
+    P_turbine = 0.5 * air_density * A * (v.^3) .* Cp_interp;
     
     % Implement cut-in and cut-out speeds
     P_turbine(v < v_cut_in | v > v_cut_out) = 0;
     
     % Calculate the Annual Energy Production (AEP)
-    AEP = trapz(v, P_turbine .* WBD_values) * 8760; % Integrate and scale for hours in a year
+    AEP = (trapz(v, P_turbine .* WBD_values) * 8760)*10^(-3); % Integrate and scale for hours in a year
     
-    % Display the AEP
-    fprintf('The Annual Energy Production (AEP) is %.2f kWh\n', AEP);
-    
+       
 
     %% Visualization for debugging purposes
 

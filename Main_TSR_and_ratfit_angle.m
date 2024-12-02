@@ -41,7 +41,7 @@ initial_population = [
 intcon=1;
 
 %run the genetic algorithm
-options = optimoptions('ga','MaxGenerations',20,'PopulationSize',20,'FunctionTolerance',1e-6);
+options = optimoptions('ga','MaxGenerations',5,'PopulationSize',10,'FunctionTolerance',1e-6);
 [x,fval,exitflag,output,population,scores] = ga(fun,nvars,A,b,Aeq,beq,lb,ub,nonlcon,intcon,options);
 
 % print optimal values of the variables in command window
