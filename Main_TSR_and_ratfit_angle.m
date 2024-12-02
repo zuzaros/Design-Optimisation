@@ -26,17 +26,8 @@ fun = @(X)objFunc(X,Params); %objective function
 
 % Define the initial population (based on the Rational Fit SP coefficients)
 initial_population = [
-    6, -5.9866, 17.9690, -4.7276, -1.8453, 1.2805;
     6, -6.4647, 18.5039, -3.4771, -1.9282, 1.4646;
-    6, -5.3317, 16.7600, -2.7657, -1.9457, 1.5886;
-    6, -10.2486, 36.1042, -4.7691, -1.3941, 1.6585;
-    6, -8.5806, 32.1355, -5.3311, -1.6156, 1.3753;
-    6, 4.4113, 0.3003, -0.7812, -1.5046, 0.6608;
-    6, 5.2884, 0.2179, -0.8799, -1.5004, 0.6595;
-    6, 7.0592, -0.8130, -0.7869, -1.4679, 0.6382;
-    6, 8.3346, -1.8094, -0.6264, -1.4490, 0.6255;
-    6, 9.7365, -3.3674, -0.3146, -1.4390, 0.6006
-];
+    ]; 
 
 intcon=1;
 
@@ -56,18 +47,18 @@ function F = objFunc(X,Params)
     lambda=X(1); %tip speed ratio
 
     % Get the twist distribution coefficients
-    a = X(2); % coefficient a
-    b = X(3); % coefficient b
-    c = X(4); % coefficient c
-    d = X(5); % coefficient d
-    e = X(6); % coefficient e
+    p1 = X(2);
+    p2 = X(3);
+    p3 = X(4);
+    q1 = X(5);
+    q2 = X(6);
 
     % there are 25 stations, going from root to tip
     r = linspace(0,1,25); % radial position of blade in 25 steps
     lambda_r = lambda*r; % local tip speed ratio
 
     % Rational Fit (2/2) for newTwist
-    newTwist = (a * r.^2 + b * r + c) ./ (d * r + e ); % rational fit equation
+    newTwist = (p1 * r.^2 + p2 * r + p3) ./ (r.^2 + q1 * r + q2);
 
     newChord = optimalChord(numBlades,r,lambda_r);
 
@@ -115,15 +106,17 @@ function F = objFunc(X,Params)
     drawnow
 
     subplot(2,2,3)
-    plot(linspace(0,1,25), newChord)
-    ylabel('Chord length, m')
-    xlabel('r/R')
+    plot(r,newChord)
+    xlabel('r')
+    ylabel('Chord (m)')
+    title('Chord Distribution')
     hold on
      
     subplot(2,2,4)
-    plot(linspace(0,1,25), newTwist)
-    ylabel('Local twist, deg')
-    xlabel('r/R')
+    plot(r,newTwist)
+    xlabel('r')
+    ylabel('Twist (degrees)')
+    title('Twist Distribution')
     hold on
     drawnow
    

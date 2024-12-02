@@ -69,11 +69,15 @@ for i = 1:length(wind_speeds)
     % Get the coefficients and add to the matrix
     coeffs = coeffvalues(custom_fit);
     coeff_matrix = [coeff_matrix; coeffs];
+    
 end
 
 % Print the coefficients matrix
 disp('Coefficients matrix:');
 disp(coeff_matrix);
+
+% Save the coefficients to a file
+save('coefficients.mat', 'coeff_matrix');
 
 % Labels and legend
 xlabel('Position (m)', 'FontSize', 16);
