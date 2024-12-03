@@ -43,8 +43,8 @@ intcon=1;
 
 %run the genetic algorithm
 options = optimoptions('ga', ...
-    'MaxGenerations', 5, ... % Increase generations for more iterations
-    'PopulationSize',5, ... % Adjust population size
+    'MaxGenerations', 50, ... % Increase generations for more iterations
+    'PopulationSize', 50, ... % Adjust population size
     'FunctionTolerance', 1e-6, ...
     'OutputFcn', @(options, state, flag) gaOutputFunction(options, state, flag));
 
@@ -72,7 +72,7 @@ function F = objFunc(X,Params)
     r = linspace(0,1,25); % radial position of blade in 25 steps
     lambda_r = lambda*r; % local tip speed ratio
 
-    % Rational Fit (2/2) for newTwist
+    % Rational (2/2) for newTwist
     newTwist = (p1 * r.^2 + p2 * r + p3) ./ (r.^2 + q1 * r + q2);
 
     newChord = optimalChord(numBlades,r,lambda_r);
@@ -149,10 +149,7 @@ function [state, options, optchanged] = gaOutputFunction(options, state, flag)
     % Initialize optchanged to false
     optchanged = false;
 
-    % set marker colours
-    colors=lines(state.Generation);
-
-
+   
     % Check the flag to determine the current state of the GA
     switch flag
         case 'init'
@@ -169,7 +166,7 @@ function [state, options, optchanged] = gaOutputFunction(options, state, flag)
             figure(2);
             % plot best fitness value at each iteration
             BestAEP=-state.Best;
-            plot(BestAEP,'o','MarkerEdgeColor',colors(state.Generation,:));
+            plot(BestAEP,'o','MarkerEdgeColor', 'auto', 'MarkerFaceColor', 'k');
             xlabel('Generation');
             ylabel('Best AEP');
             title('Genetic Algorithm Progress');

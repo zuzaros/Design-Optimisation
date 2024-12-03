@@ -43,8 +43,8 @@ intcon=1;
 
 %run the genetic algorithm
 options = optimoptions('ga', ...
-    'MaxGenerations', 100, ... % Increase generations for more iterations
-    'PopulationSize', 100, ... % Adjust population size
+    'MaxGenerations', 50, ... % Increase generations for more iterations
+    'PopulationSize', 50, ... % Adjust population size
     'FunctionTolerance', 1e-6, ...
     'OutputFcn', @(options, state, flag) gaOutputFunction(options, state, flag));
 
@@ -72,7 +72,7 @@ function F = objFunc(X,Params)
     r = linspace(0,1,25); % radial position of blade in 25 steps
     lambda_r = lambda*r; % local tip speed ratio
 
-    % Rational Fit (2/2) for newTwist
+    % Rational (2/2) for newTwist
     newTwist = (p1 * r.^2 + p2 * r + p3) ./ (r.^2 + q1 * r + q2);
 
     newChord = optimalChord(numBlades,r,lambda_r);

@@ -12,11 +12,11 @@ numBlades = 3;
 lambda = 4;
 
 % Scale the coefficients
-p1 = 9.4511;
-p2 = 1.2359;
-p3 = 4.5949;
-q1 = 1.0781;
-q2 = 1.1677;
+p1 = -4.7399;
+p2 = 1.3120;
+p3 = 4.8616;
+q1 = -0.234;
+q2 = 0.3671;
 
 % There are 25 stations, going from root to tip
 r = linspace(0, 1, 25); % Radial position of blade in 25 steps
