@@ -1,32 +1,22 @@
-
-
-load population5050GAall4.mat
-
-% Replace 'population5050GAall4' with the correct variable name from the .mat file
-final_population = population; 
-
-% Check the dimensions of final_population
-if size(final_population, 2) ~= 5
-    error('The final_population variable does not have the expected dimensions of 50x5.');
-end
+close all
+clear all
+clc 
 
 %%% Open InitialiseScript and change the filepaths to match your system
 InitialiseScript %runs initialistion script for file paths and names
 
-% Initialize variables to store results
-nVars = size(final_population, 2); % Number of variables
-fmincon_results = zeros(size(final_population)); % To store refined solutions
-fmincon_scores = zeros(size(final_population, 1), 1); % To store objective function values
+nVars = 5; % Number of variables
 
 % Optimization options for fmincon
+%                                                                                                                                                                                                                              
 options_fmincon = optimoptions('fmincon', ...
     'Display', 'iter', ... % Display progress
     'Algorithm', 'sqp', ... % Use active-set algorithm for robust performance
-    'MaxIterations', 1000, ... % Maximum number of iterations
-    'FunctionTolerance', 1e-6, ... % Function tolerance
-    'StepTolerance', 1e-6, ... % Step tolerance
-    'ConstraintTolerance', 1e-6, ... % Constraint tolerance
-    'OptimalityTolerance', 1e-6); % Optimality tolerance
+    'MaxIterations', 100, ... % Maximum number of iterations
+    'FunctionTolerance', 1e-3, ... % Function tolerance
+    'StepTolerance', 1e-3, ... % Step tolerance
+    'ConstraintTolerance', 1e-3, ... % Constraint tolerance
+    'OptimalityTolerance', 1e-3); % Optimality tolerance
 
 % Bounds and constraints (same as GA)
 lb = [-10, -10, -5, -10, 0.1];
@@ -37,10 +27,8 @@ b = [];
 Aeq = [];
 beq = [];
 
-% Select a subset of points from the population as starting points
-num_starting_points = 5; % Number of starting points to select
-starting_indices = randperm(size(final_population, 1), num_starting_points);
-starting_points = final_population(starting_indices, :);
+% Set the initial point
+initial_point = [-4.7399, 1.3120, 4.8616, -0.2324, 0.3671];
 
 
 % Initialize figure for plotting optimization progress
@@ -51,30 +39,20 @@ ylabel('Optimized Objective Value');
 title('Optimization Progress');
 grid on;
 
-% Iterate through each selected starting point
-for i = 1:size(starting_points, 1)
-    % Starting point (selected individual from the final population)
-    x0 = double(starting_points(i, :)); % Ensure x0 is of type double
+% Run fmincon
+[x_opt, fval_opt] = fmincon(@(X)objFunc(X, Params), ... % Objective function
+                            initial_point, ...          % Starting point
+                            A, b, Aeq, beq, ...         % Constraints
+                            lb, ub, ...                 % Bounds
+                            @(X)nonlcon(X), ...         % Nonlinear constraints
+                            options_fmincon);           % Optimization options
 
-    % Run fmincon
-    [x_opt, fval_opt] = fmincon(@(X)objFunc(X, Params), ... % Objective function
-                                x0, ...                    % Starting point
-                                A, b, Aeq, beq, ...        % Constraints
-                                lb, ub, ...                % Bounds
-                                @(X)nonlcon(X), ...        % Nonlinear constraints
-                                options_fmincon);          % Optimization options
+% Store results
+fmincon_results = x_opt; % Optimized parameters
+fmincon_scores = fval_opt; % Optimized objective value
 
-    % Store results
-    fmincon_results(i, :) = x_opt; % Optimized parameters
-    fmincon_scores(i) = fval_opt; % Optimized objective value
-
-    % Plot the optimized objective value against iteration number
-    plot(i, fval_opt, 'ro');
-end
-
-% Find the best solution from fmincon results
-[best_score, best_idx] = min(fmincon_scores(1:num_starting_points));
-best_solution = fmincon_results(best_idx, :);
+% Plot the optimized objective value against iteration number
+plot(1, fval_opt, 'ro');
 
 % Display the best solution and score
 disp('Best solution found by fmincon:');
@@ -188,8 +166,8 @@ function [c, ceq] = nonlcon(X)
     newTwist = (p1 * r.^2 + p2 * r + p3) ./ (r.^2 + q1 * r + q2);
 
     % Define the inequality constraints
-    c = [newTwist - 20; % Twist angle should be less than or equal to 20 degrees
-         -(-newTwist - 20)]; % Twist angle should be greater than or equal to -20 degrees
+    c = [newTwist - 30; % Twist angle should be less than or equal to 20 degrees
+         -(-newTwist - 30)]; % Twist angle should be greater than or equal to -20 degrees
 
     % No equality constraints
     ceq = [];
